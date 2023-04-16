@@ -23,7 +23,8 @@
 #define __MGX_EAT(...)
 
 //Number
-#define __MGX_DEC_0 DEC_ERROR
+#define __MGX_DEC___MGX_DEC_ERROR __MGX_DEC_ERROR
+#define __MGX_DEC_0 __MGX_DEC_ERROR
 #define __MGX_DEC_1 0
 #define __MGX_DEC_2 1
 #define __MGX_DEC_3 2
@@ -125,10 +126,24 @@
 #define __MGX_INC_47 48
 #define __MGX_INC_48 49
 #define __MGX_INC_49 50
-#define __MGX_INC_50 INC_ERROR
+#define __MGX_INC_50 __MGX_INC_ERROR
+#define __MGX_INC___MGX_INC_ERROR __MGX_INC_ERROR
+
+#define __MGX_NUM_IS_0_0 __MGX_PROBE(~)
+
+#define __MGX_IS_ZERO(c) __MGX_CHECK(__MGX_CAT_(__MGX_IS_ZERO_, c))
+#define __MGX_IS_ZERO_0 __MGX_PROBE(~)
 
 #define __MGX_DEC(n) __MGX_CAT_(__MGX_DEC_, n)
 #define __MGX_INC(n) __MGX_CAT_(__MGX_INC_, n)
+
+#define __MGX_LESS_IIF(c) __MGX_CAT_(__MGX_LESS_IIF_, c)
+#define __MGX_LESS_IIF_0(t,f) f
+#define __MGX_LESS_IIF_1(t,f) t
+
+#define __MGX_LESS(a,b) __MGX_EVAL(__MGX_LESS_
+#define __MGX_LESS_(a,b) __MGX_LESS_IIF(__MGX_IS_ZERO
+
 
 //Defer
 
@@ -200,16 +215,23 @@
 #define __MGX_GET_FIRST(...) __MGX_GET_FIRST_(__VA_ARGS__, ~)
 #define __MGX_GET_FIRST_(A, ...) A
 
-#define __MGX_CUT_CHECK(...) __MGX_CHECK(__MGX_CAT(__MGX_CUT_IS_, __MGX_CHECK_B(__VA_ARGS__, __MGX_NULL,)))
-#define __MGX_CUT_IS___MGX_NULL __MGX_PROBE(~)
-#define __MGX_CUT_IIF(c) __MGX_CAT_(__MGX_CUT_IIF_, c)
-#define __MGX_CUT_IIF_0(t, f) f
-#define __MGX_CUT_IIF_1(t, f) t
-#define __MGX_CUT_FIRST(...) __MGX_CUT_IIF(__MGX_CUT_CHECK(__VA_ARGS__))(__MGX_EAT, __MGX_CUT_FIRST_)(__VA_ARGS__)
-#define __MGX_CUT_FIRST_OPT(...) __MGX_CUT_IIF(__MGX_CUT_CHECK(__VA_ARGS__))(__MGX_EAT, __MGX_CUT_FIRST_OPT_)(__VA_ARGS__)
-#define __MGX_CUT_FIRST_(A, ...) __VA_ARGS__
-#define __MGX_CUT_FIRST_OPT_(A, ...) , __VA_ARGS__
+#define __MGX_ARG_COUNT_CHECK(...) __MGX_CHECK(__MGX_CAT(__MGX_ARG_COUNT_, __MGX_CHECK_B(__VA_ARGS__, __MGX_NULL)))
+#define __MGX_ARG_COUNT____MGX_NULL __MGX_PROBE(~)
+#define __MGX_ARG_IIF(c) __MGX_CAT_(__MGX_ARG_IIF_, c)
+#define __MGX_ARG_IIF_0(t, f) f
+#define __MGX_ARG_IIF_1(t, f) t
+#define __MGX_ARG_FIRST(...) __MGX_ARG_IIF(__MGX_ARG_CHECK(__VA_ARGS__))(__MGX_EAT, __MGX_ARG_FIRST_)(__VA_ARGS__)
+#define __MGX_ARG_FIRST_OPT(...) __MGX_ARG_IIF(__MGX_ARG_CHECK(__VA_ARGS__))(__MGX_EAT, __MGX_ARG_FIRST_OPT_)(__VA_ARGS__)
+#define __MGX_ARG_FIRST_(A, ...) __VA_ARGS__
+#define __MGX_ARG_FIRST_OPT_(A, ...) , __VA_ARGS__
 
+#define __MGX_ARG_COUNT(...) __MGX_ARG_COUNT_(__VA_ARGS__,50,49,48,47,46,45,44,43,42,41,40,39,38,37,36,35,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
+#define __MGX_ARG_COUNT_(_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15,_16,_17,_18,_19,_20,_21,_22,_23,_24,_25,_26,_27,_28,_29,_30,_31,_32,_33,_34,_35,_36,_37,_38,_39,_40,_41,_42,_43,_44,_45,_46,_47,_48,_49,_50, N) N
+
+#define __MGX_ARG_OPT(...) 
+
+
+#define __MGX_CMP(a, b)
 
 // Detection
 #define __MGX_CHECK_B(a,b, ...) b
@@ -232,10 +254,6 @@
 #define __MGX_BITAND_0(b) 0
 #define __MGX_BITAND_1(b) b
 
-#define __MGX_COMPL(x) __MGX_CAT_(__MGX_COMPL_, x)
-#define __MGX_COMPL_0 1
-#define __MGX_COMPL_1 0
-
 #define __MGX_BOOL(x) __MGX_CHECK(__MGX_CAT_(__MGX_BOOL_, x))
 #define __MGX_BOOL_true __MGX_PROBE(~)
 #define __MGX_BOOL_1 __MGX_PROBE(~)
@@ -249,3 +267,6 @@
 #define MGX_IF(c) __MGX_IIF(__MGX_BOOL(__MGX_GET_FIRST(c, 0)))
 #define MGX_WHEN(c) MGX_IF(c)(__MGX_EXPAND, __MGX_EAT)
 #define MGX_WHEN_NOT(c) MGX_IF(c)(__MGX_EAT, __MGX_EXPAND)
+#define MGX_FOR(I, T,
+__MGX_IS_ZERO(1)
+__MGX_IS_ZERO(0)
