@@ -237,3 +237,4 @@
 
 #define MGX_IF(c) __MGX_IIF(__MGX_BOOL(__MGX_GET_FIRST(c, 0)))
 #define MGX_WHEN(c) MGX_IF(x)(__MGX_EXPAND, __MGX_EAT)
+#define MGX_WHEN_NOT(c) MGX_IF(x)(__MGX_EAT, __MGX_EXPAND)

@@ -47,6 +47,6 @@
 // Functions
 #define MGX_T_NAME(T) __MGX_T_FORWARD_RECURSIVE(__MGX_T_GET_NAME, T)
 #define MGX_T_VAR(T, name) __MGX_T_FORWARD_RECURSIVE(__MGX_T_GET_VAR, T, name)
-#define MGX_T_VAR_PTR(T, name) MGX_T_VAR(T, __MGX_DEFER_n(__MGX_DEFER_MAX, __MGX_STAR_)()(name))
+#define MGX_T_VAR_PTR(T, name) MGX_T_VAR(T, __MGX_DEFER_n(__MGX_DEFER_MAX, __MGX_LPAREN_)() __MGX_DEFER_n(__MGX_DEFER_MAX, __MGX_STAR_)()name __MGX_DEFER_n(__MGX_DEFER_MAX, __MGX_RPAREN_)())
 #define MGX_T_PTR(T) MGX_IF(__MGX_T_IS_ARRAY(T))(MGX_T_VAR_PTR(T, ), T*)
 #define MGX_T(T) MGX_T_VAR(T,)
