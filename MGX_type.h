@@ -25,22 +25,22 @@
 
 #define __MGX_T_FORWARD_RECURSIVE_(M, L, ...) MGX_IF(__MGX_T_IS_ARRAY(__MGX_GET_FIRST(__VA_ARGS__)))\
 				   (__MGX_T_FORWARD_RECURSIVE_ARRAY(M, L, __VA_ARGS__), MGX_IF(__MGX_T_IS_COMP(__MGX_GET_FIRST(__VA_ARGS__))) \
-														      (M ## _COMP(M, L, __VA_ARGS__), M(M, L, __VA_ARGS__)))
+														      (M ## _COMP(__VA_ARGS__), M(__VA_ARGS__)))
 #define __MGX_T_FORWARD_RECURSIVE(M, ...) __MGX_EVAL(__MGX_T_FORWARD_RECURSIVE_(M, __MGX_DEFER_MAX, __VA_ARGS__))
 
 
-#define __MGX_T_GET_NAME_COMP(M, L, T) __MGX_T_COMP_EXTRACT(__MGX_T_COMP_GLUE, T)
+#define __MGX_T_GET_NAME_COMP(T) __MGX_T_COMP_EXTRACT(__MGX_T_COMP_GLUE, T)
 #define __MGX_T_COMP_EXTRACT(M, T) __MGX_EXPAND(M __MGX_LPAREN __MGX_T_CAT_(__MGX_T_COMP_NAME_, T) __MGX_RPAREN)
 #define __MGX_T_COMP_NAME_struct struct __MGX_COMMA
 #define __MGX_T_COMP_NAME_union union __MGX_COMMA
 #define __MGX_T_COMP_GLUE(s, n) s ## __ ## n
 
 #define __MGX_T_GET_NAME_ARRAY(A, S) __MGX_T_CAT(A, __MGX_T_CAT_(__, S))
-#define __MGX_T_GET_NAME(M, L, T) T
+#define __MGX_T_GET_NAME(T) T
 
 
-#define __MGX_T_GET_VAR(M, L, T, name) T name
-#define __MGX_T_GET_VAR_COMP(M, L, T, name) T name
+#define __MGX_T_GET_VAR(T, name) T name
+#define __MGX_T_GET_VAR_COMP(T, name) T name
 #define __MGX_T_GET_VAR_ARRAY(A, S) A [S]
 
 

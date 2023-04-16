@@ -220,6 +220,17 @@
 //Boolean
 #define __MGX_NOT(x) __MGX_CHECK(__MGX_CAT_(__MGX_NOT_, x))
 #define __MGX_NOT_0 1
+#define __MGX_NOT_false 1
+
+#define __MGX_OR(a, b) __MGX_BITOR(__MGX_BOOL(a))(__MGX_BOOL(b))
+#define __MGX_BITOR(a) __MGX_CAT_(__MGX_BITOR_, a)
+#define __MGX_BITOR_0(b) b
+#define __MGX_BITOR_1(b) 1
+
+#define __MGX_AND(a, b) __MGX_BITAND(__MGX_BOOL(a))(__MGX_BOOL(b))
+#define __MGX_BITAND(a) __MGX_CAT_(__MGX_BITAND_, a)
+#define __MGX_BITAND_0(b) 0
+#define __MGX_BITAND_1(b) b
 
 #define __MGX_COMPL(x) __MGX_CAT_(__MGX_COMPL_, x)
 #define __MGX_COMPL_0 1
