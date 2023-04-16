@@ -114,8 +114,6 @@
 #define MGX_ARG_SECOND(...) __MGX_ARG_SECOND(__VA_ARGS__,,,)
 #define __MGX_ARG_SECOND(A, B, ...) B
 
-#define __MGX_ARG_OPT(...) 
-
 #define MGX_ARG_GET_N(n, ...) MGX_ARG_SECOND(MGX_WHILE(MGX_NUM_NOT_ZERO, __MGX_ARG_NEXT, MGX_DEC(MGX_ARG_COUNT(__VA_ARGS__)), __VA_ARGS__), )
 
 #define __MGX_CMP(a, b)

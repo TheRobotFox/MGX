@@ -50,9 +50,3 @@
 #define MGX_T_VAR_PTR(T, name) MGX_T_VAR(T, __MGX_DEFER_n(__MGX_DEFER_MAX, __MGX_LPAREN_)() __MGX_DEFER_n(__MGX_DEFER_MAX, __MGX_STAR_)()name __MGX_DEFER_n(__MGX_DEFER_MAX, __MGX_RPAREN_)())
 #define MGX_T_PTR(T) MGX_IF(__MGX_T_IS_ARRAY(T))(MGX_T_VAR_PTR(T, ), T*)
 #define MGX_T(T) MGX_T_VAR(T,)
-
-MGX_T_NAME(struct abc)
-MGX_T_NAME(ARRAY(ARRAY(struct abc, 3),5))
-MGX_T(ARRAY(ARRAY(struct abc, 3),5))
-MGX_T_PTR(ARRAY(ARRAY(struct abc, 3),5))
-MGX_T_VAR_PTR(ARRAY(ARRAY(struct abc, 3),5), name)
