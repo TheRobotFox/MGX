@@ -121,14 +121,3 @@
 #define MGX_T_VAR_PTR(T, name) MGX_T_VAR(PTR(T), name)
 #define MGX_T_PTR(T) MGX_T_VAR_PTR(T,)
 #define MGX_T(T) MGX_T_VAR(T,)
-
-MGX_T(ARRAY(struct abc, 3))
-MGX_T(PTR(ARRAY(struct abc, 3)))
-MGX_T(ARRAY(PTR(struct abc), 3))
-
-
-MGX_T(ARRAY(PTR(ARRAY(PTR(ARRAY(PTR(struct abc), 3)), 3)),3))
-
-MGX_T_VAR(ARRAY(ARRAY(PTR(ARRAY(PTR(ARRAY(PTR(PTR(ARRAY(struct abc, 5))),4)),3)),2),1), var)
-MGX_T(int)
-MGX_T(struct abc)
