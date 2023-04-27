@@ -1,5 +1,5 @@
 #pragma once
-#include "MGX_base.h"
+#include "MGX_static.h"
 #define __MGX_T_CAT(a, ...) __MGX_T_CAT_(a,__VA_ARGS__)
 #define __MGX_T_CAT_(a, ...) a ## __VA_ARGS__
 #define __MGX_T_CAT2(a,b) __MGX_T_CAT2_(a,b)
@@ -35,16 +35,16 @@
 #define __MGX_T_IS_COMP(T) __MGX_T_CAT_(__MGX_T_IS_COMP_, T)
 
 
-#define __MGX_T_IS_RIGHT(T) MGX_ARG_SECOND(__MGX_T_FORWARD_RECURSIVE(__MGX_T_GET_R, T), )
+#define __MGX_T_IS_RIGHT(T) MGX_ARG_SECOND(__MGX_T_FORWARD_RECURSIVE(__MGX_T_GET_R, T))
 
 #define __MGX_T_GET_R(T) T, 0
-#define __MGX_T_GET_R_COMP(L, T, S, res) T, res
-#define __MGX_T_GET_R_ARRAY(L, T, S, res) T, 1
-#define __MGX_T_GET_R_PTR(L, T, res) T, res
+#define __MGX_T_GET_R_COMP(T, S, res) T, res
+#define __MGX_T_GET_R_ARRAY(T, S, res) T, 1
+#define __MGX_T_GET_R_PTR(T, res) T, res
 
 
 #define __MGX_T_FORWARD_RECURSIVE_INDIRECT() __MGX_T_FORWARD_RECURSIVE_
-#define __MGX_T_FORWARD_RECURSIVE(M, ...) __MGX_T_EVAL(__MGX_T_FORWARD_RECURSIVE_(M, __MGX_DEFER_MAX, 0, __VA_ARGS__))
+#define __MGX_T_FORWARD_RECURSIVE(M, ...) __MGX_T_EVAL(__MGX_T_FORWARD_RECURSIVE_(M, MGX_T_MAX_DEPTH, __VA_ARGS__))
 
 #define __MGX_T_TYPE(T) MGX_IF(__MGX_T_IS_ARRAY(T))\
 				   (ARRAY, MGX_IF(__MGX_T_IS_PTR(T)) \
@@ -53,19 +53,13 @@
 
 #define __MGX_T_FORWARD_RECURSIVE_PREPROCESS(T) MGX_IF(__MGX_T_IS_COMP(T))(__MGX_T_CONVERT_COMP(T), T)
 
-#define __MGX_T_FORWARD_RECURSIVE_(M, L, I, ...) MGX_IF(__MGX_T_TYPE(MGX_ARG_FIRST(__VA_ARGS__)))(\
+#define __MGX_T_FORWARD_RECURSIVE_(M, L, ...) MGX_IF(__MGX_T_TYPE(MGX_ARG_FIRST(__VA_ARGS__)))(\
 														__MGX_DEFER_n(L, M)(__VA_ARGS__) __MGX_EAT,\
-														__MGX_DEFER_n(L, __MGX_T_FORWARD_RECURSIVE_CALL))(__MGX_T_CAT(M##_, __MGX_T_TYPE(MGX_ARG_FIRST(__VA_ARGS__))), I, (MGX_ARG_TAIL_OPT(__MGX_T_CAT(__MGX_T_EXTRACT_, __MGX_T_FORWARD_RECURSIVE_PREPROCESS(MGX_ARG_FIRST(__VA_ARGS__))))),\
+														__MGX_DEFER_n(L, __MGX_T_FORWARD_RECURSIVE_CALL))(__MGX_T_CAT(M##_, __MGX_T_TYPE(MGX_ARG_FIRST(__VA_ARGS__))), (MGX_ARG_TAIL_OPT(__MGX_T_CAT(__MGX_T_EXTRACT_, __MGX_T_FORWARD_RECURSIVE_PREPROCESS(MGX_ARG_FIRST(__VA_ARGS__))))),\
 															__MGX_DEFER2(__MGX_T_FORWARD_RECURSIVE_INDIRECT)()(\
-																M, MGX_DEC(MGX_DEC(L)), MGX_INC(I), __MGX_DEFER(__MGX_ARG_FIRST)(__MGX_T_CAT(__MGX_T_EXTRACT_, __MGX_T_FORWARD_RECURSIVE_PREPROCESS(MGX_ARG_FIRST(__VA_ARGS__)))) MGX_ARG_TAIL_OPT(__VA_ARGS__)))
+																M, MGX_DEC(MGX_DEC(L)), __MGX_DEFER(__MGX_ARG_FIRST)(__MGX_T_CAT(__MGX_T_EXTRACT_, __MGX_T_FORWARD_RECURSIVE_PREPROCESS(MGX_ARG_FIRST(__VA_ARGS__)))) MGX_ARG_TAIL_OPT(__VA_ARGS__)))
 
-#define __MGX_T_FORWARD_RECURSIVE_CALL(FUNCTION, I, OPT, ...) __MGX_DEFER(FUNCTION)(I, MGX_ARG_FIRST(__VA_ARGS__) __MGX_T_EXPAND OPT MGX_ARG_TAIL_OPT(__VA_ARGS__))
-
-
-#define __MGX_T_ARG_FIRST(...) __MGX_T_ARG_FIRST_(__VA_ARGS__)
-#define __MGX_T_ARG_FIRST_(A, ...) A
-#define __MGX_T_ARG_FIRST_INDIRECT() __MGX_T_ARG_FIRST
-
+#define __MGX_T_FORWARD_RECURSIVE_CALL(FUNCTION, OPT, ...) __MGX_DEFER(FUNCTION)(MGX_ARG_FIRST(__VA_ARGS__) __MGX_T_EXPAND OPT MGX_ARG_TAIL_OPT(__VA_ARGS__))
 
 #define __MGX_T_EXTRACT_ARRAY(T, S) T, S
 #define __MGX_T_EXTRACT_PTR(T) T
@@ -83,37 +77,48 @@
 
 
 #define __MGX_T_GET_NAME(T) T
-#define __MGX_T_GET_NAME_COMP(L, A, S) __MGX_T_CAT(S, __MGX_T_CAT_(__, A))
-#define __MGX_T_GET_NAME_ARRAY(L, A, S) __MGX_T_CAT(A, __MGX_T_CAT_(__, S))
-#define __MGX_T_GET_NAME_PTR(L, A) __MGX_T_CAT(A, __ptr)
+#define __MGX_T_GET_NAME_COMP(A, S) __MGX_T_CAT(S, __MGX_T_CAT_(__, A))
+#define __MGX_T_GET_NAME_ARRAY(A, S) __MGX_T_CAT(A, __MGX_T_CAT_(__, S))
+#define __MGX_T_GET_NAME_PTR(A) __MGX_T_CAT(A, __ptr)
 
 #define __MGX_T_LPST() (*
 
-#define __MGX_T_DEFER_END(L, M) __MGX_DEFER60 __MGX_DEFER_max __MGX_DEFER_max __MGX_DEFER_n __MGX_DEFER_n __MGX_DEFER_n __MGX_DEFER_n (L, __MGX_EMPTY)()(L, __MGX_EMPTY)()(L, __MGX_EMPTY)()(L, __MGX_EMPTY)()(__MGX_EMPTY)()(__MGX_EMPTY)()(M)()
+#define __MGX_T_GET_VAR(T, N) T,(EMPTY), N ,(EMPTY),
+#define __MGX_T_GET_VAR_COMP(T, S, P, N, A, array) S T, P, N, A,
+#define __MGX_T_GET_VAR_ARRAY(T, S, P, N, A, array) T, P, N, MGX_ARG_LIST_CONCAT((B(S)), A), true
 
-#define __MGX_T_GET_VAR(T, N) T, , N , ,
-#define __MGX_T_GET_VAR_COMP(L, T, S, P, N, A, ptr) S T, P, N, A,
-#define __MGX_T_GET_VAR_ARRAY(L, T, S, P, N, A, ptr) T, P, N, [S]A, true
-
-#define __MGX_T_GET_VAR_PTR(L, T, P, N, A, ptr) T, P MGX_IF(ptr)(\
-												 __MGX_T_DEFER_END, __MGX_EAT)(L, __MGX_LPAREN_)\
-												__MGX_T_DEFER_END(L,__MGX_EMPTY)*, N, MGX_IF(ptr)(\
-												__MGX_T_DEFER_END, __MGX_EAT)(L, __MGX_RPAREN_)A,
+#define __MGX_T_GET_VAR_PTR(T, P, N, A, array) T, MGX_ARG_APPEND(P, MGX_WHEN(array)(LPAREN,) STAR),\
+												N, MGX_IF(array)(MGX_ARG_LIST_CONCAT((RPAREN), A), A),
 
 #define __MGX_T_GET_T(T) T
-#define __MGX_T_GET_T_COMP(L, A, S) S A
-#define __MGX_T_GET_T_ARRAY(L, A, S) A
-#define __MGX_T_GET_T_PTR(L, A) A
+#define __MGX_T_GET_T_COMP(A, S) S A
+#define __MGX_T_GET_T_ARRAY(A, S) A
+#define __MGX_T_GET_T_PTR(A) A
 
 #define __MGX_T_GET_I(A, I, a) I(A __MGX_T_EXPAND3 a)
 #define __MGX_T_GET_I_COMP(A, S) S A
 #define __MGX_T_GET_I_ARRAY(A, S) ARRAY(A, S)
 #define __MGX_T_GET_I_PTR(A) PTR(A)
 
+
+#define __MGX_T_COMPILE_B(S) [S]
+#define __MGX_T_COMPILE_EMPTY
+#define __MGX_T_COMPILE_STAR *
+#define __MGX_T_COMPILE_LPAREN (
+#define __MGX_T_COMPILE_RPAREN )
+
+#define __MGX_T_COMPILE(E) __MGX_T_COMPILE_##E
+
 #define __MGX_T_POST(...) __MGX_T_POST_(__VA_ARGS__)
-#define __MGX_T_POST_(T, P, N, A, ptr, raw) T P N A
+#define __MGX_T_POST_(T, P, N, A, ptr, raw) T MGX_S_FOREACH(__MGX_T_COMPILE, __MGX_EXPAND P) N MGX_S_FOREACH(__MGX_T_COMPILE, __MGX_EXPAND A)
 
 #define __MGX_T_INJECT(T, I, A) __MGX_T_FORWARD_RECURSIVE(__MGX_T_GET_I, T, I, A)
+
+// Config
+// MAX_DEPTH: Type evaluation levels
+//			  higher values allow more nesting but might impact performance
+//			  Must be at most __MGX_DEFER_MAX
+#define MGX_T_MAX_DEPTH 50
 
 // Functions
 #define MGX_T_NAME(T) __MGX_T_FORWARD_RECURSIVE(__MGX_T_GET_NAME, T)
