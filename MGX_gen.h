@@ -1,8 +1,8 @@
 #include "MGX_base.h"
 
 // #define GEN_LIST \
-// A([NAME], MODULE(...)) \ AUTOMATIC MODE
-// C([NAME], FUNC) \ MANUAL MODE
+// A([TYPE_NAME], MODULE, MODULE_ARGS...+type ) \ AUTOMATIC MODE
+// C([TYPE_NAME], FUNC) \ MANUAL MODE
 // ...
 
 #define __MGX_GEN_CAT(A,B) __MGX_GEN_CAT_(A,B)
@@ -16,11 +16,21 @@
 #define __MGX_GEN_FOREACH(M, ...) __MGX_ARG_FOREACH(1, __MGX_GEN_FORWARD, M, __VA_ARGS__)
 
 
-#define __MGX_GEN_IMPL_A(name, mod) typedef struct __MGX_GEN_STRUCT_##name{__MGX_GEN_TYPE_##mod __data;} name; __MGX_GEN_IMPL_##mod
-#define __MGX_GEN_IMPL_C(name, FUNC) FUNC##_IMPL(name)
+/* #define __MGX_GEN_IMPL_A(name, mod) typedef struct {__MGX_GEN_TYPE_##mod __data;} name; __MGX_GEN_IMPL_##mod */
+/* #define __MGX_GEN_IMPL_C(name, FUNC) FUNC##_IMPL(name) */
 
-#define __MGX_GEN_GET_A(name, mod, M) , name : M##_##mod
-#define __MGX_GEN_GET_C(name, FUNC, ARG) , name : FUNC##_GET(name, ARG)
-
+// ... = Generic Description List
 #define MGX_GEN_IMPL(...) __MGX_GEN_FOREACH(__MGX_GEN_IMPL, __VA_ARGS__)
+
+
+#define __MGX_GEN_GET_A(name, mod, ...) , name : mod(__VA_ARGS__)
+#define __MGX_GEN_GET_C(name, FUNC, ...) , name : FUNC##_GET(name, __VA_ARGS__)
+
+// x=Input
+// M=Target Function
+// Gerneric Description List
 #define MGX_GEN_GET(x, M, ...) _Generic(x __MGX_ARG_FOREACH(2, __MGX_GEN_FORWARD, __MGX_GEN_GET, M, __VA_ARGS__))
+
+#define TEST(...) __VA_ARGS__
+
+/* MGX_GEN_GET(x, pop, A(integer, LIST, int, awdaw), C(long, __HEAP, awd)) */
